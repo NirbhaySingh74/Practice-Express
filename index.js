@@ -44,8 +44,14 @@ app.post("/api/users", (req, res) => {
     ...body,
     id: users.length + 1,
   });
-  fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err, data) => {
-    return res.json({ status: "success", id: users.length + 1 });
+  fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err) => {
+    if (err) {
+      console.error("Error writing to JSON file:", err);
+      return res
+        .status(500)
+        .json({ status: "error", message: "Failed to add user" });
+    }
+    return res.json({ status: "success", id: users.length });
   });
 });
 
